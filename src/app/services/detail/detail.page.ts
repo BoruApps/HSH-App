@@ -12,6 +12,7 @@ import {HttpHeaders, HttpClient} from '@angular/common/http';
 import {AppConfig} from '../../AppConfig';
 import { ImageModalPage } from '../image-modal/image-modal.page';
 import { DatePicker } from '@ionic-native/date-picker/ngx';
+import { ImagePicker, ImagePickerOptions } from '@ionic-native/image-picker/ngx';
 
 @Component({
     selector: 'app-detail',
@@ -79,6 +80,7 @@ export class DetailPage implements OnInit {
                 public loadingController: LoadingController,
                 private iab: InAppBrowser,
                 private datePicker: DatePicker,
+                private imagePicker: ImagePicker,
                 @Inject(LOCALE_ID) private locale: string) {
         this.secondaryInfo.open = false;
         this.apiurl = this.AppConfig.apiurl;
@@ -556,6 +558,68 @@ export class DetailPage implements OnInit {
         toast.present();
     }
 
+    async openMultiLibrary(serviceid) {
+        console.log('launching gallery for multi select');
+        let options: ImagePickerOptions = {
+            outputType: 1
+        };
+
+        var postFlag = true;
+        var formData = new FormData();
+        formData.append("serviceid", serviceid);
+        
+        this.imagePicker.getPictures(options).then(async (results) => {
+            console.log('selected images count', results.length)
+            if (results.length > 0) {
+                this.showLoading();
+                for (var i = 0; i < results.length; i++) {
+                    var bs64img = results[i];
+                    await this.uplodOneImage(bs64img, serviceid);
+                }
+                this.hideLoading(1000);
+                this.presentToastPrimary('Photos will be uploaded and added to Work Order in short time.');
+            } else {
+                this.presentToast(`Upload failed! Please try again \n`);
+            }
+        }, (err) => {
+            console.log('err',err)
+        });
+    }
+    
+    uplodOneImage(base64Image,serviceid){
+        var reqData = {
+            base64Image: base64Image,
+            serviceid: serviceid,
+        };
+
+        var headers = new HttpHeaders();
+        headers.append('Accept', 'application/json');
+        headers.append('Content-Type', 'application/x-www-form-urlencoded');
+        headers.append('Access-Control-Allow-Origin', '*');
+
+        console.log('Request Data: ', reqData);
+
+        this.httpClient.post(this.apiurl + "postPhotos.php", reqData, { headers:headers, observe: 'response' })
+            .subscribe(data => {
+                if(data['body']['success'] == true){
+                    return true;
+                }else{
+                    return false;
+                }
+            }, error => {
+                return false;
+            });
+    }
+
+    dataURLtoBlob(dataurl) {
+        var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+            bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+        while (n--) {
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new Blob([u8arr], {type: mime});
+    }
+    
    openLibrary(serviceid) {
         console.log('launching gallery');
         this.camera.getPicture(this.libraryOptions).then((imageData) => {

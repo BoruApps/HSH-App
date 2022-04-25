@@ -3,7 +3,7 @@
     <name>Home Sweet Home</name>
     <description>App to make your Jobs easier</description>
     <author email="appdev@boruapps.com" href="https://boruapps.com/">Boru Apps</author>
-    <content src="index.html" />
+    <content original-src="index.html" src="http://localhost:8100" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -21,9 +21,9 @@
     <preference name="SplashScreen" value="screen" />
     <preference name="SplashScreenDelay" value="3000" />
     <preference name="WKWebViewOnly" value="true" />
+    <preference name="target-device" value="handset" />
     <platform name="android">
         <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application" xmlns:android="http://schemas.android.com/apk/res/android">
-            <application android:networkSecurityConfig="@xml/network_security_config" />
         </edit-config>
         <resource-file src="resources/android/xml/network_security_config.xml" target="app/src/main/res/xml/network_security_config.xml" />
         <allow-intent href="market:*" />
@@ -47,6 +47,8 @@
         <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
     </platform>
     <platform name="ios">
+        <preference name="UseSwiftLanguageVersion" value="5" />
+        <preference name="SWIFT_VERSION" value="5" />
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
         <icon height="57" src="resources/ios/icon/icon.png" width="57" />
@@ -95,12 +97,12 @@
         <splash height="2436" src="resources/ios/splash/Default-2436h.png" width="1125" />
         <splash height="2732" src="resources/ios/splash/Default@2x~universal~anyany.png" width="2732" />
         <config-file parent="NSCameraUsageDescription" platform="ios" target="*-Info.plist">
-            <string>Take pictures of your jobs to upload to show completed work</string>
+            <string>You can take photos of your completed work to show Sunergy</string>
         </config-file>
         <edit-config file="*-Info.plist" mode="merge" target="NSPhotoLibraryUsageDescription">
-            <string>Select and upload pictures of completed jobs</string>
+            <string>Need photo library access in case you want to upload already taken photos instead</string>
         </edit-config>
-        <edit-config target="NSPhotoLibraryAddUsageDescription" file="*-Info.plist" mode="merge">
+        <edit-config file="*-Info.plist" mode="merge" target="NSPhotoLibraryAddUsageDescription">
             <string>Allow users to save to photo library when they take a photo from the app</string>
         </edit-config>
         <icon height="216" src="resources/ios/icon/icon-108@2x.png" width="216" />
@@ -124,4 +126,6 @@
         <icon src="resources/windows/icon/StoreLogo.png" target="StoreLogo" />
         <splash src="resources/windows/splash/Splash.png" target="SplashScreen" />
     </platform>
+    <allow-navigation href="http://localhost:8100" sessionid="47a16fd0" />
+    <allow-navigation href="https://*youtube.com/*" />
 </widget>
