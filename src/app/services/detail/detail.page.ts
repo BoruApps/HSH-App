@@ -560,54 +560,60 @@ export class DetailPage implements OnInit {
 
     async openMultiLibrary(serviceid) {
         console.log('launching gallery for multi select');
+
         let options: ImagePickerOptions = {
             outputType: 1
         };
 
-        var postFlag = true;
-        var formData = new FormData();
-        formData.append("serviceid", serviceid);
-        
-        this.imagePicker.getPictures(options).then(async (results) => {
-            console.log('selected images count', results.length)
+        var imageResponse = [];
+        await this.imagePicker.getPictures(options).then(async (results) => {
             if (results.length > 0) {
-                this.showLoading();
                 for (var i = 0; i < results.length; i++) {
-                    var bs64img = results[i];
-                    await this.uplodOneImage(bs64img, serviceid);
+                    var bs64img = 'data:image/png;base64,' + results[i];
+                    var imageBlob = this.dataURLtoBlob(bs64img);
+                    await imageResponse.push(imageBlob);
                 }
-                this.hideLoading(1000);
-                this.presentToastPrimary('Photos will be uploaded and added to Work Order in short time.');
-            } else {
-                this.presentToast(`Upload failed! Please try again \n`);
             }
         }, (err) => {
-            console.log('err',err)
+            console.log('err', err)
         });
+
+        console.log('imageResponse', imageResponse);
+
+        if (imageResponse.length > 0) {
+            await this.uplodMultiFormImage(imageResponse, serviceid);
+        } else {
+            this.presentToast(`Upload failed! Please try again \n`);
+        }
     }
-    
-    uplodOneImage(base64Image,serviceid){
-        var reqData = {
-            base64Image: base64Image,
-            serviceid: serviceid,
-        };
+
+    async uplodMultiFormImage(images, serviceid) {
+        var formData = new FormData();
+
+        for (var i = 0; i < images.length; i++) {
+            formData.append("blob[]", images[i]);
+        }
+        formData.append("serviceid", serviceid);
 
         var headers = new HttpHeaders();
         headers.append('Accept', 'application/json');
         headers.append('Content-Type', 'application/x-www-form-urlencoded');
         headers.append('Access-Control-Allow-Origin', '*');
 
-        console.log('Request Data: ', reqData);
-
-        this.httpClient.post(this.apiurl + "postPhotos.php", reqData, { headers:headers, observe: 'response' })
+        this.showLoading();
+        await this.httpClient.post(this.apiurl + "postFormPhotos.php", formData, {
+            headers: headers,
+            observe: 'response'
+        })
             .subscribe(data => {
-                if(data['body']['success'] == true){
-                    return true;
-                }else{
-                    return false;
+                this.hideLoading();
+                if (data['body']['success'] == true) {
+                    this.presentToastPrimary('Images successfully uploaded!');
+                } else {
+                    this.presentToast(`Upload failed! Please try again \n`);
                 }
             }, error => {
-                return false;
+                this.presentToast(`Upload failed! Please try again \n`);
             });
     }
 
