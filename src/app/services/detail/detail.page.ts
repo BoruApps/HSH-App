@@ -12,6 +12,7 @@ import {HttpHeaders, HttpClient} from '@angular/common/http';
 import {AppConfig} from '../../AppConfig';
 import { ImageModalPage } from '../image-modal/image-modal.page';
 import { DatePicker } from '@ionic-native/date-picker/ngx';
+import { ImagePicker, ImagePickerOptions } from '@ionic-native/image-picker/ngx';
 
 @Component({
     selector: 'app-detail',
@@ -79,6 +80,7 @@ export class DetailPage implements OnInit {
                 public loadingController: LoadingController,
                 private iab: InAppBrowser,
                 private datePicker: DatePicker,
+                private imagePicker: ImagePicker,
                 @Inject(LOCALE_ID) private locale: string) {
         this.secondaryInfo.open = false;
         this.apiurl = this.AppConfig.apiurl;
@@ -556,6 +558,74 @@ export class DetailPage implements OnInit {
         toast.present();
     }
 
+    async openMultiLibrary(serviceid) {
+        console.log('launching gallery for multi select');
+
+        let options: ImagePickerOptions = {
+            outputType: 1
+        };
+
+        var imageResponse = [];
+        await this.imagePicker.getPictures(options).then(async (results) => {
+            if (results.length > 0) {
+                for (var i = 0; i < results.length; i++) {
+                    var bs64img = 'data:image/png;base64,' + results[i];
+                    var imageBlob = this.dataURLtoBlob(bs64img);
+                    await imageResponse.push(imageBlob);
+                }
+            }
+        }, (err) => {
+            console.log('err', err)
+        });
+
+        console.log('imageResponse', imageResponse);
+
+        if (imageResponse.length > 0) {
+            await this.uplodMultiFormImage(imageResponse, serviceid);
+        } else {
+            this.presentToast(`Upload failed! Please try again \n`);
+        }
+    }
+
+    async uplodMultiFormImage(images, serviceid) {
+        var formData = new FormData();
+
+        for (var i = 0; i < images.length; i++) {
+            formData.append("blob[]", images[i]);
+        }
+        formData.append("serviceid", serviceid);
+
+        var headers = new HttpHeaders();
+        headers.append('Accept', 'application/json');
+        headers.append('Content-Type', 'application/x-www-form-urlencoded');
+        headers.append('Access-Control-Allow-Origin', '*');
+
+        this.showLoading();
+        await this.httpClient.post(this.apiurl + "postFormPhotos.php", formData, {
+            headers: headers,
+            observe: 'response'
+        })
+            .subscribe(data => {
+                this.hideLoading();
+                if (data['body']['success'] == true) {
+                    this.presentToastPrimary('Images successfully uploaded!');
+                } else {
+                    this.presentToast(`Upload failed! Please try again \n`);
+                }
+            }, error => {
+                this.presentToast(`Upload failed! Please try again \n`);
+            });
+    }
+
+    dataURLtoBlob(dataurl) {
+        var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+            bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+        while (n--) {
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new Blob([u8arr], {type: mime});
+    }
+    
    openLibrary(serviceid) {
         console.log('launching gallery');
         this.camera.getPicture(this.libraryOptions).then((imageData) => {
