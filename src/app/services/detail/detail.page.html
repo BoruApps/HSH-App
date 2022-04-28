@@ -1,155 +1,194 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button type="submit"  defaultHref="/tabs/services" text="Back" (click)="saveJob(servicedetail.salesorderid)"></ion-back-button>
-    </ion-buttons>
-    <ion-title>{{servicedetail.subject}}</ion-title>
-    <ion-buttons slot="primary">
-      <ion-button type="button" (click)="goToComments(servicedetail.salesorderid)" text="Comments">
-        <ion-text>Chat</ion-text>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-back-button type="submit" defaultHref="/tabs/services" text="Back"
+                             (click)="saveJob(servicedetail.salesorderid)"></ion-back-button>
+        </ion-buttons>
+        <ion-title>{{servicedetail.subject}}</ion-title>
+        <ion-buttons slot="primary">
+            <ion-button type="button" (click)="goToComments(servicedetail.salesorderid)" text="Comments">
+                <ion-text>Chat</ion-text>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <form #form="ngForm" (ngSubmit)="saveJob(servicedetail.salesorderid)">
-  <ion-list>
-    <ion-item lines="none">
-      <ion-label position="stacked">Transferee Name</ion-label>
-      <ion-text>{{servicedetail.cf_765}} {{servicedetail.cf_743}}</ion-text>
-    </ion-item>
-    <ion-item lines="none">
-      <ion-label position="stacked">Transferee Phone Number</ion-label>
-      <ion-text>{{servicedetail.cf_748}}</ion-text>
-      <ion-button target="_self" color="primary" (click)="transferee(servicedetail.cf_748)" size="default" slot="end" type="button"><ion-icon name="call" size="large" ></ion-icon></ion-button>
-    </ion-item>
-    <ion-item lines="none">
-      <ion-label position="stacked">Transferee Email</ion-label>
-      <ion-text>{{servicedetail.cf_752}}</ion-text>
-      <ion-button target="_self" color="primary" (click)="email(servicedetail.cf_752)" size="default" slot="end" type="button"><ion-icon name="mail" size="large" ></ion-icon></ion-button>
-    </ion-item>
-    <!-- Secondary Info -->
-    <div (click)="toggleSecondary()" class="accordion-list" >
-      <ion-item lines="none">
-        <ion-label position="stacked">Secondary Contact Name</ion-label>
-        <ion-text>{{servicedetail.cf_766}} {{servicedetail.cf_745}}</ion-text>
-        <ion-icon *ngIf="!secondaryInfo.open" name="arrow-forward" slot="end"></ion-icon>
-        <ion-icon *ngIf="secondaryInfo.open" name="arrow-down" slot="end"></ion-icon>
-      </ion-item>
-    </div>
-    <div [ngClass]="{'section-active': secondaryInfo.open, 'section': !secondaryInfo.open}">
-      <ion-item lines="none">
-        <ion-label position="stacked">Secondary Contact Phone</ion-label>
-        <ion-text>{{servicedetail.cf_749}}</ion-text>
-        <ion-button target="_self" color="primary" (click)="transferee(servicedetail.cf_749)" size="default" slot="end" type="button"><ion-icon name="call" size="large" ></ion-icon></ion-button>
-      </ion-item>
-      <ion-item lines="none">
-        <ion-label position="stacked">Secondary Contact Email</ion-label>
-        <ion-text>{{servicedetail.cf_753}}</ion-text>
-        <ion-button target="_self" color="primary" (click)="email(servicedetail.cf_753)" size="default" slot="end" type="button"><ion-icon name="mail" size="large" ></ion-icon></ion-button>
-      </ion-item>
-    </div>
-    <!-- Secondary Info -->
-    <ion-item lines="none">
-      <ion-label position="stacked">Address Details</ion-label>
-      <ion-text *ngIf="servicedetail.bill_pobox">{{servicedetail.bill_street}}, {{servicedetail.bill_pobox}}, {{servicedetail.bill_city}}, {{servicedetail.bill_state}} {{servicedetail.bill_code}}</ion-text>
-      <ion-text *ngIf="!servicedetail.bill_pobox">{{servicedetail.bill_street}}, {{servicedetail.bill_city}}, {{servicedetail.bill_state}} {{servicedetail.bill_code}}</ion-text>
-      <ion-button target="_blank" color="primary" href="https://maps.apple.com/?daddr={{servicedetail.bill_street}}, {{servicedetail.bill_city}}, {{servicedetail.bill_state}} {{servicedetail.bill_code}}" size="default" slot="end" type="button"><ion-icon name="navigate" size="large" ></ion-icon></ion-button>
-    </ion-item>
-    <ion-item lines="none">
-      <ion-label position="stacked" class="">Job Details for Organizer</ion-label>
-      <ion-text>{{servicedetail.cf_job_detail_org}}</ion-text>
-    </ion-item>
+    <form #form="ngForm" (ngSubmit)="saveJob(servicedetail.salesorderid)">
+        <ion-list>
+            <ion-item lines="none">
+                <ion-label position="stacked">Transferee Name</ion-label>
+                <ion-text>{{servicedetail.cf_765}} {{servicedetail.cf_743}}</ion-text>
+            </ion-item>
+            <ion-item lines="none">
+                <ion-label position="stacked">Transferee Phone Number</ion-label>
+                <ion-text>{{servicedetail.cf_748}}</ion-text>
+                <ion-button target="_self" color="primary" (click)="transferee(servicedetail.cf_748)" size="default"
+                            slot="end" type="button">
+                    <ion-icon name="call" size="large"></ion-icon>
+                </ion-button>
+            </ion-item>
+            <ion-item lines="none">
+                <ion-label position="stacked">Transferee Email</ion-label>
+                <ion-text>{{servicedetail.cf_752}}</ion-text>
+                <ion-button target="_self" color="primary" (click)="email(servicedetail.cf_752)" size="default"
+                            slot="end" type="button">
+                    <ion-icon name="mail" size="large"></ion-icon>
+                </ion-button>
+            </ion-item>
+            <!-- Secondary Info -->
+            <div (click)="toggleSecondary()" class="accordion-list">
+                <ion-item lines="none">
+                    <ion-label position="stacked">Secondary Contact Name</ion-label>
+                    <ion-text>{{servicedetail.cf_766}} {{servicedetail.cf_745}}</ion-text>
+                    <ion-icon *ngIf="!secondaryInfo.open" name="arrow-forward" slot="end"></ion-icon>
+                    <ion-icon *ngIf="secondaryInfo.open" name="arrow-down" slot="end"></ion-icon>
+                </ion-item>
+            </div>
+            <div [ngClass]="{'section-active': secondaryInfo.open, 'section': !secondaryInfo.open}">
+                <ion-item lines="none">
+                    <ion-label position="stacked">Secondary Contact Phone</ion-label>
+                    <ion-text>{{servicedetail.cf_749}}</ion-text>
+                    <ion-button target="_self" color="primary" (click)="transferee(servicedetail.cf_749)" size="default"
+                                slot="end" type="button">
+                        <ion-icon name="call" size="large"></ion-icon>
+                    </ion-button>
+                </ion-item>
+                <ion-item lines="none">
+                    <ion-label position="stacked">Secondary Contact Email</ion-label>
+                    <ion-text>{{servicedetail.cf_753}}</ion-text>
+                    <ion-button target="_self" color="primary" (click)="email(servicedetail.cf_753)" size="default"
+                                slot="end" type="button">
+                        <ion-icon name="mail" size="large"></ion-icon>
+                    </ion-button>
+                </ion-item>
+            </div>
+            <!-- Secondary Info -->
+            <ion-item lines="none">
+                <ion-label position="stacked">Address Details</ion-label>
+                <ion-text *ngIf="servicedetail.bill_pobox">{{servicedetail.bill_street}}, {{servicedetail.bill_pobox}}
+                    , {{servicedetail.bill_city}}, {{servicedetail.bill_state}} {{servicedetail.bill_code}}</ion-text>
+                <ion-text *ngIf="!servicedetail.bill_pobox">{{servicedetail.bill_street}}, {{servicedetail.bill_city}}
+                    , {{servicedetail.bill_state}} {{servicedetail.bill_code}}</ion-text>
+                <ion-button target="_blank" color="primary"
+                            href="https://maps.apple.com/?daddr={{servicedetail.bill_street}}, {{servicedetail.bill_city}}, {{servicedetail.bill_state}} {{servicedetail.bill_code}}"
+                            size="default" slot="end" type="button">
+                    <ion-icon name="navigate" size="large"></ion-icon>
+                </ion-button>
+            </ion-item>
+            <ion-item lines="none">
+                <ion-label position="stacked" class="">Job Details for Organizer</ion-label>
+                <ion-text>{{servicedetail.cf_job_detail_org}}</ion-text>
+            </ion-item>
 
-    <!-- Coordinator info -->
-    <ion-item lines="none">
-      <ion-label position="stacked" class="coordinator">Coordinator - Update Me!</ion-label>
-      <ion-text>{{servicedetail.assigned_to}}</ion-text>
-      <ion-button target="_blank" color="primary" (click)="contact(servicedetail.assigned_to)" size="default" slot="end" type="button"><ion-icon name="contact" size="large" ></ion-icon></ion-button>
-    </ion-item>
-    <br>
-      <div *ngIf="isCompleteJob == 0">
-        <ion-item lines="none">
-          <ion-label position="stacked" class="detail-header">Status</ion-label>
-          <ion-select (ionChange)="addUpdate($event)"  name="job_status"  placeholder="{{servicedetail.job_status}}">
-            <ion-select-option *ngFor="let picklist of status_picklist">{{picklist}}</ion-select-option>
-          </ion-select>
-        </ion-item>
-        <ion-item lines="none">
-          <ion-label position="stacked" class="detail-header">Follow Up Date</ion-label>
-          <!--<ion-datetime name="date_sent" (ionChange)="addUpdate($event)" displayFormat="MM-DD-YYYY" value="{{date_sent}}" [(ngModel)]="date_sent" ></ion-datetime>-->
-          <ion-datetime name="date_sent" (ionChange)="addUpdate($event)" displayFormat="MM-DD-YYYY" [yearValues]="customYearValues.reverse()" placeholder={{date_sent}}></ion-datetime>
-        </ion-item>
-        <ion-item lines="none" class="service-date-wrap">
-          <ion-label position="stacked" class="detail-header">Service Date</ion-label>
-           <!-- <ion-input (ionInput)="addUpdate($event)" type="text" name="cf_738"  value="{{servicedetail.cf_738}}"></ion-input>-->
-            <!--<ion-datetime name="cf_738" (ionChange)="addUpdate($event)" displayFormat="MM-DD-YYYY hh:mm A" value="{{cf_738}}" [(ngModel)]="cf_738"></ion-datetime>-->
-            <ion-grid class="date-grid">
-              <ion-row class="date-row">
-                <ion-col class="date-col" size="8">
-                  <ion-datetime class="date-time" name="cf_738" (ionChange)="addUpdate($event)" displayFormat="MM-DD-YYYY" [yearValues]="customYearValues.reverse()" placeholder="{{cf_738}}"></ion-datetime>
-                </ion-col>
-                <ion-col size="4">
-                  <ion-button size="default" expand="block" color="tertiary"  (click)="clearDate(servicedetail?.salesorderid)">
-                    <ion-text class="add-photo-button">
-                      Clear Date
-                    </ion-text>
-                  </ion-button>
-                </ion-col>
-              </ion-row>
+            <!-- Coordinator info -->
+            <ion-item lines="none">
+                <ion-label position="stacked" class="coordinator">Coordinator - Update Me!</ion-label>
+                <ion-text>{{servicedetail.assigned_to}}</ion-text>
+                <ion-button target="_blank" color="primary" (click)="contact(servicedetail.assigned_to)" size="default"
+                            slot="end" type="button">
+                    <ion-icon name="contact" size="large"></ion-icon>
+                </ion-button>
+            </ion-item>
+            <br>
+            <div *ngIf="isCompleteJob == 0">
+                <ion-item lines="none">
+                    <ion-label position="stacked" class="detail-header">Status</ion-label>
+                    <ion-select (ionChange)="addUpdate($event)" name="job_status"
+                                placeholder="{{servicedetail.job_status}}">
+                        <ion-select-option *ngFor="let picklist of status_picklist">{{picklist}}</ion-select-option>
+                    </ion-select>
+                </ion-item>
+                <ion-item lines="none">
+                    <ion-label position="stacked" class="detail-header">Follow Up Date</ion-label>
+                    <!--<ion-datetime name="date_sent" (ionChange)="addUpdate($event)" displayFormat="MM-DD-YYYY" value="{{date_sent}}" [(ngModel)]="date_sent" ></ion-datetime>-->
+                    <ion-datetime name="date_sent" (ionChange)="addUpdate($event)" displayFormat="MM-DD-YYYY"
+                                  [yearValues]="customYearValues.reverse()" placeholder={{date_sent}}></ion-datetime>
+                </ion-item>
+                <ion-item lines="none" class="service-date-wrap">
+                    <ion-label position="stacked" class="detail-header">Service Date</ion-label>
+                    <!-- <ion-input (ionInput)="addUpdate($event)" type="text" name="cf_738"  value="{{servicedetail.cf_738}}"></ion-input>-->
+                    <!--<ion-datetime name="cf_738" (ionChange)="addUpdate($event)" displayFormat="MM-DD-YYYY hh:mm A" value="{{cf_738}}" [(ngModel)]="cf_738"></ion-datetime>-->
+                    <ion-grid class="date-grid">
+                        <ion-row class="date-row">
+                            <ion-col class="date-col" size="7">
+                                <ion-datetime class="date-time" name="cf_738" id="cf_738"
+                                              (ionChange)="addUpdate($event)" displayFormat="MM-DD-YYYY"
+                                              [yearValues]="customYearValues.reverse()"
+                                              [(ngModel)]="cf_738"></ion-datetime>
+                            </ion-col>
+                            <ion-col size="5" *ngIf="cf_738 != ''">
+                                <ion-button size="default" expand="block" color="tertiary"
+                                            (click)="clearDate(servicedetail?.salesorderid)">
+                                    <ion-text class="add-photo-button">
+                                        Clear Date
+                                    </ion-text>
+                                </ion-button>
+                            </ion-col>
+                            <ion-col size="5" *ngIf="cf_738 == ''">
+                                <ion-button size="default" expand="block" color="tertiary" (click)="enterServiceDate()">
+                                    <ion-text class="add-photo-button">
+                                        Enter Date
+                                    </ion-text>
+                                </ion-button>
+                            </ion-col>
+                        </ion-row>
+                    </ion-grid>
+                </ion-item>
+                <ion-item lines="none">
+                    <ion-label position="stacked" class="detail-header">Service Time</ion-label>
+                    <!-- <ion-input (ionInput)="addUpdate($event)" type="text" name="cf_738"  value="{{servicedetail.cf_738}}"></ion-input>-->
+                    <!--<ion-datetime name="cf_738" (ionChange)="addUpdate($event)" displayFormat="MM-DD-YYYY hh:mm A" value="{{cf_738}}" [(ngModel)]="cf_738"></ion-datetime>-->
+                    <ion-datetime name="service_time" (ionChange)="addUpdate($event)" displayFormat="hh:mm A"
+                                  placeholder="{{service_time}}" minuteValues="0,15,30,45"></ion-datetime>
+                </ion-item>
+            </div>
+            <div *ngIf="isCompleteJob == 1">
+                <ion-item lines="none">
+                    <ion-label position="stacked" class="detail-header">Status</ion-label>
+                    <ion-text>{{servicedetail.job_status}}</ion-text>
+                </ion-item>
+                <ion-item lines="none">
+                    <ion-label position="stacked" class="detail-header">Follow Up Date</ion-label>
+                    <ion-text>{{servicedetail.date_sent}}</ion-text>
+                </ion-item>
+                <ion-item lines="none">
+                    <ion-label position="stacked" class="detail-header">Service Date</ion-label>
+                    <ion-text>{{servicedetail.cf_738}}</ion-text>
+                </ion-item>
+            </div>
+            <ion-grid class="">
+                <ion-row class="ion-align-items-center ion-justify-content-center">
+                    <ion-col class="padding-left-none" size="9">
+                        <ion-button expand="full" size="default" expand="block" color="tertiary"
+                                    (click)="openCamera(servicedetail?.salesorderid)">
+                            <ion-icon name="camera"></ion-icon>
+                            <ion-text class="add-photo-button">
+                                Take Photos
+                            </ion-text>
+                        </ion-button>
+                    </ion-col>
+                    <ion-col size="3">
+                        <ion-button size="default" expand="block" color="tertiary"
+                                    (click)="openMultiLibrary(servicedetail?.salesorderid)">
+                            <ion-icon name="folder-open"></ion-icon>
+                        </ion-button>
+                    </ion-col>
+                </ion-row>
             </ion-grid>
-        </ion-item>
-        <ion-item lines="none">
-          <ion-label position="stacked" class="detail-header">Service Time</ion-label>
-          <!-- <ion-input (ionInput)="addUpdate($event)" type="text" name="cf_738"  value="{{servicedetail.cf_738}}"></ion-input>-->
-          <!--<ion-datetime name="cf_738" (ionChange)="addUpdate($event)" displayFormat="MM-DD-YYYY hh:mm A" value="{{cf_738}}" [(ngModel)]="cf_738"></ion-datetime>-->
-          <ion-datetime name="service_time" (ionChange)="addUpdate($event)" displayFormat="hh:mm A" placeholder="{{service_time}}" minuteValues="0,15,30,45"></ion-datetime>
-        </ion-item>
-      </div>
-      <div *ngIf="isCompleteJob == 1">
-        <ion-item lines="none">
-          <ion-label position="stacked" class="detail-header">Status</ion-label>
-          <ion-text>{{servicedetail.job_status}}</ion-text>
-        </ion-item>
-        <ion-item lines="none">
-            <ion-label position="stacked" class="detail-header">Follow Up Date</ion-label>
-            <ion-text>{{servicedetail.date_sent}}</ion-text>
-        </ion-item>
-        <ion-item lines="none">
-            <ion-label position="stacked" class="detail-header">Service Date</ion-label>
-            <ion-text>{{servicedetail.cf_738}}</ion-text>
-        </ion-item>
-      </div>
-      <ion-grid class="">
-        <ion-row class="ion-align-items-center ion-justify-content-center" >
-          <ion-col class="padding-left-none" size="9">
-            <ion-button expand="full" size="default" expand="block" color="tertiary" (click)="openCamera(servicedetail?.salesorderid)">
-              <ion-icon name="camera"></ion-icon>
-              <ion-text class="add-photo-button">
-                Take Photos
-              </ion-text>
-            </ion-button>
-          </ion-col>
-          <ion-col size="3">
-            <ion-button size="default" expand="block" color="tertiary"  (click)="openMultiLibrary(servicedetail?.salesorderid)">
-              <ion-icon name="folder-open"></ion-icon>
-            </ion-button>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    <br>
-  </ion-list>
+            <br>
+        </ion-list>
 
-  <br><br><br><br><br>
+        <br><br><br><br><br>
 
-  <div class="button-grouping ion-padding anchor-bottom" >
-    <ion-button expand="full" size="large" expand="block" color="tertiary" fill="solid" (click)="goToComments(servicedetail.salesorderid)">
-      <ion-icon name="chatbubbles"></ion-icon>
-      <ion-text class="add-photo-button">
-        &nbsp; Tap to contact {{csc_firstname}}
-      </ion-text>
-    </ion-button>
-  </div>
-  </form>
+        <div class="button-grouping ion-padding anchor-bottom">
+            <ion-button expand="full" size="large" expand="block" color="tertiary" fill="solid"
+                        (click)="goToComments(servicedetail.salesorderid)">
+                <ion-icon name="chatbubbles"></ion-icon>
+                <ion-text class="add-photo-button">
+                    &nbsp; Tap to contact {{csc_firstname}}
+                </ion-text>
+            </ion-button>
+        </div>
+    </form>
 </ion-content>

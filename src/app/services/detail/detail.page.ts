@@ -33,6 +33,7 @@ export class DetailPage implements OnInit {
     };
     date_sent: string;
     cf_738: string;
+    cf_738_previuse: string;
     service_time: string;
     serviceDateTime: string;
     csc_firstname: any;
@@ -132,6 +133,7 @@ export class DetailPage implements OnInit {
                     this.cf_738 = new Date(allfields.cf_738).toISOString();*/
                     this.date_sent = allfields.cf_followupdate;
                     this.cf_738 = allfields.cf_738;
+                    this.cf_738_previuse = allfields.cf_738;
                     this.service_time = allfields.service_time;
                     this.serviceDateTime = allfields.service_date;
                     console.log('servicedetail', this.servicedetail);
@@ -226,6 +228,9 @@ export class DetailPage implements OnInit {
         return timewithampm;
     }
 
+    async enterServiceDate() {
+        document.getElementById('cf_738').click();
+    }
     async clearDate(recordid) {
         var recordid = recordid;
         //cf_738 = Service Date
@@ -278,7 +283,9 @@ export class DetailPage implements OnInit {
                 console.log(data['body']);
                 if(success == true){
                     this.cf_738 = "";
-                    this.presentToast('Service date cleared.');
+                    this.cf_738_previuse ="";
+
+                    this.presentToastsuccess('Service date cleared.');
                     console.log("Service date cleared.");
                 }else{
                     this.presentToast('Failed to save due to an error');
@@ -302,8 +309,18 @@ export class DetailPage implements OnInit {
         }
         this.updatefields[fieldname] = fieldvalue;
         console.log('adding update to queue: ', fieldname, fieldvalue);
-        console.log(this.updatefields);
-        this.updateJob(this.servicedetail.salesorderid);
+
+        if(fieldname == 'cf_738'){
+            if(this.cf_738_previuse != fieldvalue || fieldvalue == ''){
+                if(fieldvalue != ''){
+                    this.updateJob(this.servicedetail.salesorderid);
+                }
+            }
+            this.cf_738_previuse =fieldvalue;
+            this.cf_738 = fieldvalue;
+        }else{
+            this.updateJob(this.servicedetail.salesorderid);
+        }
     }
 
     async completeJob(salesorderid) {
@@ -399,7 +416,7 @@ export class DetailPage implements OnInit {
                     console.log(data['body']);
                     if(success == true){
                         console.log("Saved and updated data for jobs");
-                        this.presentToast( 'Update saved');
+                        this.presentToastsuccess( 'Update saved');
                         //this.router.navigateByUrl('/tabs/services');
                     }else{
                         this.presentToast('Failed to save due to an error, please try again');
@@ -491,7 +508,7 @@ export class DetailPage implements OnInit {
         console.log('turning off previous theme', theme_switcher[theme]);
     }
 
-   openCamera(serviceid) {
+    openCamera(serviceid) {
         console.log('launching camera');
         this.camera.getPicture(this.options).then((imageData) => {
             // imageData is either a base64 encoded string or a file URI
@@ -525,16 +542,16 @@ export class DetailPage implements OnInit {
                 "serviceid" : serviceid,
             }
         });
-        
+
         this.hideLoading(1000);
-        
+
         modal.onDidDismiss().then((dataReturned) => {
             if (dataReturned !== null) {
                 this.dataReturned = dataReturned.data;
                 //alert('Modal Sent Data :'+ dataReturned);
             }
         });
-        
+
         return await modal.present();
     }
 
@@ -544,6 +561,16 @@ export class DetailPage implements OnInit {
             duration: 2000,
             position: 'top',
             color: 'danger'
+        });
+        toast.present();
+    }
+
+    async presentToastsuccess(message: string) {
+        var toast = await this.toastController.create({
+            message: message,
+            duration: 2000,
+            position: 'top',
+            color: 'success'
         });
         toast.present();
     }
@@ -736,6 +763,7 @@ export class DetailPage implements OnInit {
             addCancelButtonWithLabel: 'Cancel',
             androidTheme: 1 //this.actionSheet.ANDROID_THEMES.THEME_HOLO_DARK,
         }
+
         this.actionSheet.show(contactOptions).then((buttonIndex: number) => {
             console.log('Option pressed', buttonIndex);
             if (buttonIndex == 1) {

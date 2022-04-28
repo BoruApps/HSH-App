@@ -1,28 +1,31 @@
 <ion-header>
     <ion-toolbar text-center>
-<!--        <ion-buttons *ngIf="show_button == true" slot="secondary">-->
-<!--            <ion-button type="button" (click)="goToJob(servicedetail.id)" text="Open Job">-->
-<!--                <ion-text>Open Job</ion-text>-->
-<!--            </ion-button>-->
-<!--        </ion-buttons>-->
+        <!--        <ion-buttons *ngIf="show_button == true" slot="secondary">-->
+        <!--            <ion-button type="button" (click)="goToJob(servicedetail.id)" text="Open Job">-->
+        <!--                <ion-text>Open Job</ion-text>-->
+        <!--            </ion-button>-->
+        <!--        </ion-buttons>-->
         <ion-title>Comments for {{servicedetail.subject}}</ion-title>
         <ion-icon name="close" (click)="closeModal()" size="large"></ion-icon>
     </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding" *ngIf="comments.length > 0">
-    <div [attr.data-position]="(user_id == comment['userid']) ? 'right': 'left'" *ngFor="let comment of comments; last as isLast">
+    <div [attr.data-position]="(user_id == comment['userid']) ? 'right': 'left'"
+         *ngFor="let comment of comments; last as isLast">
         <div class="message-container">
-           <!--  <ion-avatar [slot]="(user_id == comment.user_id) ? 'end': 'start'">
-                <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
-            </ion-avatar> -->
+            <!--  <ion-avatar [slot]="(user_id == comment.user_id) ? 'end': 'start'">
+                 <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
+             </ion-avatar> -->
             <div id="{{comment['modcommentsid']}}" class="message-bubble ion-padding">
                 <div class="ion-text-left" [innerHTML]="comment['commentcontent']"></div>
             </div>
         </div>
         <div class="comment-bottom">
-            <ion-label color="dark" position="stacked" class="comment-sent">{{comment['createdtime']}} <br> {{comment['contractorname']}}</ion-label>
-            <ion-icon color="dark" class="read-check" size="large" *ngIf="comment.read == true" name="checkmark"></ion-icon>
+            <ion-label color="dark" position="stacked" class="comment-sent">{{comment['createdtime']}}
+                <br> {{comment['contractorname']}}</ion-label>
+            <ion-icon color="dark" class="read-check" size="large" *ngIf="comment.read == true"
+                      name="checkmark"></ion-icon>
         </div>
         <input type="hidden" *ngIf="isLast" id="last_message" name="last_message" value="{{comment['modcommentsid']}}">
     </div>
@@ -32,28 +35,30 @@
     <p class="ion-padding">No messages</p>
 </ion-content>
 
-<div class="button-grouping anchor-bottom ion-padding-horizontal" >
-        <ion-grid class="ion-no-padding">
-            <ion-row class="" >
-                <ion-col class="padding-left-none" size="12">
-                    <ion-item lines="none">
-                        <ion-label position="stacked">Request</ion-label>
-                        <ion-select (ionChange)="updateRequestPickList($event)" name="status" ng-model="data.model" value="{{request}}">
-                            <ion-select-option *ngFor="let picklist of request_picklist">{{picklist}}</ion-select-option>
-                        </ion-select>
-                    </ion-item>
-                </ion-col>
-            </ion-row>
+<div class="button-grouping anchor-bottom ion-padding-horizontal">
+    <ion-grid class="ion-no-padding">
+        <ion-row class="">
+            <ion-col class="padding-left-none" size="12">
+                <ion-item lines="none">
+                    <ion-label position="stacked">Request</ion-label>
+                    <ion-select (ionChange)="updateRequestPickList($event)" name="status" ng-model="data.model"
+                                value="{{request}}">
+                        <ion-select-option *ngFor="let picklist of request_picklist">{{picklist}}</ion-select-option>
+                    </ion-select>
+                </ion-item>
+            </ion-col>
+        </ion-row>
 
-            <ion-row class="ion-align-items-center ion-justify-content-center" >
-                <ion-col class="padding-left-none" size="9">
-                    <ion-input color="dark" (ionChange)="updateMessage($event)" placeholder="Write a message"></ion-input>
-                </ion-col>
-                <ion-col size="3">
-                    <ion-button size="large" expand="block" color="tertiary" (click)="sendMessage()">
-                        <ion-icon name="send"></ion-icon>
-                    </ion-button>
-                </ion-col>
-            </ion-row>
-        </ion-grid>
-    </div>
+        <ion-row class="ion-align-items-center ion-justify-content-center">
+            <ion-col class="padding-left-none" size="9">
+                <ion-textarea color="dark" (ionChange)="updateMessage($event)"
+                              placeholder="Write a message"></ion-textarea>
+            </ion-col>
+            <ion-col size="3">
+                <ion-button size="large" expand="block" color="tertiary" (click)="sendMessage()">
+                    <ion-icon name="send"></ion-icon>
+                </ion-button>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</div>
